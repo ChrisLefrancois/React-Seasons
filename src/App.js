@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import SeasonDisplay from './SeasonDisplay';
+import Loader from './Loader'
 
 class App extends React.Component{
 
@@ -15,19 +16,27 @@ class App extends React.Component{
     );
   };
 
+  renderContent() {
+    // if geolocation doesnt work we get an error message.
+    if  (this.state.errorMessage && !this.state.lat) {
+      return <div>Error: {this.state.errorMessage}</div>
+    }
+
+    //  render our latitude and season with SeasonDisplay.js
+    if (!this.state.errorMessage && this.state.lat) {
+      return <SeasonDisplay lat={this.state.lat}/>
+    }
+
+    return <Loader message='please accept location request '/>
+  }
+
   // React says we have to define render
   render() {
-    // if geolocation doesnt work we get an error message.
-      if  (this.state.errorMessage && !this.state.lat) {
-        return <div>Error: {this.state.errorMessage}</div>
-      }
-
-      //  render our latitude and season with SeasonDisplay.js
-      if (!this.state.errorMessage && this.state.lat) {
-        return <SeasonDisplay lat={this.state.lat}/>
-      }
-
-      return <div>Loading!</div>
+    return (
+      <div className='border red'>
+        {this.renderContent()}
+      </div>
+    );
   };
 };
 
