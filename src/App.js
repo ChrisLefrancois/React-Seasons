@@ -1,31 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component{
-  constructor(props) {
-    super(props);
 
-    this.state = { lat: null, errorMessage: '' };
+  state = { lat: null, errorMessage: '' };
 
+  componentDidMount() {
+    // get our latitude with geolocation
     window.navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({ lat: position.coords.latitude });
-      },
-      err => {
-        this.setState({ errorMessage: err.message });
-      }
+      position => this.setState({ lat: position.coords.latitude }),
+      err => this.setState({ errorMessage: err.message })
     );
   };
 
   // React says we have to define render
   render() {
+    // if geolocation doesnt work we get an error message.
       if  (this.state.errorMessage && !this.state.lat) {
         return <div>Error: {this.state.errorMessage}</div>
       }
 
+      //  render our latitude and season with SeasonDisplay.js
       if (!this.state.errorMessage && this.state.lat) {
-        return <div>Latitude: {this.state.lat}</div>
+        return <SeasonDisplay lat={this.state.lat}/>
       }
 
       return <div>Loading!</div>
